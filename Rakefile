@@ -16,9 +16,6 @@ end
 
 ENV['SDK_HOME'] = File.dirname(__FILE__)
 
-spec = Gem::Specification.find_by_name 'datadog-sdk-testing'
-load "#{spec.gem_dir}/lib/tasks/sdk.rake"
-
 def find_changelogs
   changelogs = Dir.glob("#{ENV['SDK_HOME']}/*/CHANGELOG.md").collect do |file_path|
     file_path
@@ -84,8 +81,6 @@ task :copy_checks do
     # contain a working check and move onto the next
     File.exist?(manifest_file_path) || next
 
-    manifest = JSON.parse(File.read(manifest_file_path))
-    manifest['supported_os'].include?(os) || next
 
     # Copy the checks over
     if File.exist? "#{check}/check.py"
