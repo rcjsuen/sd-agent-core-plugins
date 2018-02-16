@@ -7,6 +7,10 @@ cache:
     - $HOME/sd-agent
     - vendor/cache
 
+env:
+  global:
+    - SD_AGENT_BRANCH=travis-stages-test
+
 python:
   - "2.7"
 
@@ -24,3 +28,7 @@ jobs:
     - stage: test csv
       install: gem install csvlint
       script: for metadata in `ls */metadata.csv`; do csvlint ${metadata}; done
+    - stage: warm up cache
+      install:
+        - git -C $HOME/sd-agent pull || git clone -b $SD_AGENT_BRANCH --depth 1 https://github.com/serverdensity/sd-agent $HOME/sd-agent
+      script: true
