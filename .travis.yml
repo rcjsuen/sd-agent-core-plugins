@@ -1,15 +1,21 @@
 sudo: required
 
 language: python
-cache:
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/sd-agent
-    - vendor/cache
 
 env:
   global:
+    - CACHE_DIR=$HOME/.cache
+    - CACHE_FILE_el6=$CACHE_DIR/el6.tar.gz
+    - CACHE_FILE_el6_i386=$CACHE_DIR/el6_i386.tar.gz
+    - CACHE_FILE_el7=$CACHE_DIR/el7.tar.gz
+    - CACHE_FILE_precise=$CACHE_DIR/precise.tar.gz
     - SD_AGENT_BRANCH=travis-stages-test
+
+cache:
+  - directories:
+      - $HOME/sd-agent
+      - $CACHE_DIR
+  - pip
 
 python:
   - "2.7"
@@ -32,3 +38,5 @@ jobs:
       install:
         - git -C $HOME/sd-agent pull || git clone -b $SD_AGENT_BRANCH --depth 1 https://github.com/serverdensity/sd-agent $HOME/sd-agent
       script: true
+    - stage: build containers
+      script: travis_retry $HOME/sd-agent/.travis/build_containers.sh $HOME/sd-agent/.travis/dockerfiles
