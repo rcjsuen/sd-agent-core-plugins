@@ -40,7 +40,7 @@ jobs:
       script: for metadata in `ls */metadata.csv`; do csvlint ${metadata}; done
     - stage: warm up cache
       install:
-        - git -C $HOME/sd-agent pull || git clone -b $SD_AGENT_BRANCH --depth 1 https://github.com/serverdensity/sd-agent $HOME/sd-agent
+        - if [ -d "$HOME/sd-agent" ]; then git -C $HOME/sd-agent pull; else git clone -b $SD_AGENT_BRANCH --depth 1 https://github.com/serverdensity/sd-agent $HOME/sd-agent; fi
       script: true
     - stage: build sd-agent containers
       script: travis_retry $HOME/sd-agent/.travis/build_containers.sh $HOME/sd-agent/.travis/dockerfiles
