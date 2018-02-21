@@ -9,6 +9,10 @@ env:
     - CACHE_FILE_el6_i386=$CACHE_DIR/el6_i386.tar.gz
     - CACHE_FILE_el7=$CACHE_DIR/el7.tar.gz
     - CACHE_FILE_precise=$CACHE_DIR/precise.tar.gz
+    - CACHE_FILE_el6_plugins=$CACHE_DIR/el6_plugins.tar.gz
+    - CACHE_FILE_el6_i386_plugins=$CACHE_DIR/el6_i386_plugins.tar.gz
+    - CACHE_FILE_el7_plugins=$CACHE_DIR/el7_plugins.tar.gz
+    - CACHE_FILE_precise_plugins=$CACHE_DIR/precise_plugins.tar.gz
     - SD_AGENT_BRANCH=travis-stages-test
 
 cache:
@@ -38,5 +42,7 @@ jobs:
       install:
         - git -C $HOME/sd-agent pull || git clone -b $SD_AGENT_BRANCH --depth 1 https://github.com/serverdensity/sd-agent $HOME/sd-agent
       script: true
-    - stage: build containers
+    - stage: build sd-agent containers
       script: travis_retry $HOME/sd-agent/.travis/build_containers.sh $HOME/sd-agent/.travis/dockerfiles
+    - stage: build sd-agent-core-plugins containers
+      script: travis_retry $HOME/sd-agent/.travis/build_containers.sh .travis/dockerfiles plugins
